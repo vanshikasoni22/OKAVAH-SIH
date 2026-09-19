@@ -9,6 +9,7 @@
   --color-text: #f3f0f9;
   --color-text-muted: #9c93b0;
   --color-hairline: rgba(243, 240, 249, 0.1);
+  --color-warn: #e08a5c;
 }
 
 @theme inline {
@@ -20,6 +21,7 @@
   --color-text: var(--color-text);
   --color-text-muted: var(--color-text-muted);
   --color-hairline: var(--color-hairline);
+  --color-warn: var(--color-warn);
   --font-display: var(--font-big-shoulders);
   --font-sans: var(--font-inter);
 }

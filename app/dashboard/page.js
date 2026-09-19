@@ -1,28 +1,31 @@
 import Link from "next/link";
+import BookingForm from "@/components/dashboard/BookingForm";
 
 export const metadata = {
-  title: "Dashboard — Charter-IQ",
+  title: "New booking query — Charter-IQ",
 };
 
 export default function DashboardPage() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center bg-bg px-6 py-32 text-center">
-      <span className="inline-flex items-center gap-2.5 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent-soft">
-        Coming next
-      </span>
-      <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-text sm:text-5xl">
-        The dashboard is being built.
-      </h1>
-      <p className="mt-4 max-w-lg text-base text-text-muted">
-        Freight-rate forecasts, landed-cost comparisons, and port risk
-        intelligence will live here next.
-      </p>
+    <main className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-bg px-6 py-20">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(45% 35% at 50% 28%, rgba(217,164,65,0.08), transparent 70%)",
+        }}
+      />
+
       <Link
         href="/"
-        className="mt-10 inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
+        className="relative z-10 mb-10 font-display text-lg font-bold tracking-tight text-text"
       >
-        ← Back to homepage
+        Charter<span className="text-accent">·</span>IQ
       </Link>
+
+      <div className="relative z-10 flex w-full flex-1 items-center justify-center">
+        <BookingForm />
+      </div>
     </main>
   );
 }
