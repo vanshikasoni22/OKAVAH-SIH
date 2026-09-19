@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import Reveal from "@/components/motion/Reveal";
 import SignalPill from "@/components/ui/SignalPill";
@@ -8,32 +8,10 @@ import PriceTrendChart from "@/components/dashboard/PriceTrendChart";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
 import { computeLandingCost } from "@/lib/mockLandingCost";
 import { generatePriceSeries } from "@/lib/mockPriceHistory";
-
-const rateFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-const totalFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
-
-function formatDate(value) {
-  if (!value) return value;
-  return new Date(`${value}T00:00:00`).toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
+import { formatDate, rateFormatter, totalFormatter } from "@/lib/format";
 
 export default function ResultsView() {
-  const { query } = useBookingQuery();
-  const [selectedPoint, setSelectedPoint] = useState(null);
+  const { query, selectedDate, setSelectedDate } = useBookingQuery();
 
   const result = useMemo(() => (query ? computeLandingCost(query) : null), [query]);
 
@@ -63,13 +41,14 @@ export default function ResultsView() {
   }
 
   const { series, events, todayIndex } = priceData;
+  const selectedPoint = selectedDate ? series.find((p) => p.date === selectedDate) ?? null : null;
   const displayRate = selectedPoint ? selectedPoint.close : result.ratePerMT;
   const displayTotal = displayRate * query.weight;
-  const selectedDate = selectedPoint ? selectedPoint.date : series[todayIndex].date;
+  const chartSelectedDate = selectedPoint ? selectedPoint.date : series[todayIndex].date;
 
   function handleSelectDate(dateStr) {
     const point = series.find((p) => p.date === dateStr);
-    if (point) setSelectedPoint(point);
+    if (point) setSelectedDate(point.date);
   }
 
   return (
@@ -116,7 +95,7 @@ export default function ResultsView() {
           {selectedPoint && (
             <button
               type="button"
-              onClick={() => setSelectedPoint(null)}
+              onClick={() => setSelectedDate(null)}
               className="mt-2 text-sm text-accent-soft underline decoration-accent/40 underline-offset-4 transition-colors hover:text-accent"
             >
               ← Use today&apos;s recommended rate
@@ -137,17 +116,25 @@ export default function ResultsView() {
             series={series}
             events={events}
             todayIndex={todayIndex}
-            selectedDate={selectedDate}
+            selectedDate={chartSelectedDate}
             onSelectDate={handleSelectDate}
           />
         </Reveal>
 
-        <Link
-          href="/dashboard"
-          className="mt-12 inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
-        >
-          ← Edit query
-        </Link>
+        <Reveal delay={0.15} className="mt-12 flex flex-col-reverse items-center gap-4 sm:flex-row">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
+          >
+            ← Edit query
+          </Link>
+          <Link
+            href="/dashboard/confirm"
+            className="inline-flex items-center justify-center rounded-full bg-accent px-8 py-3.5 text-base font-semibold text-bg transition-transform duration-300 hover:scale-[1.02] hover:bg-accent-soft"
+          >
+            Review &amp; confirm →
+          </Link>
+        </Reveal>
       </div>
     </main>
   );
