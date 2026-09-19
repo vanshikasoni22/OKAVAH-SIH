@@ -2,8 +2,11 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "@/components/motion/Reveal";
+import ShipLoader from "@/components/ui/ShipLoader";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
+import { useStageTransition } from "@/lib/useStageTransition";
 import { computeLandingCost } from "@/lib/mockLandingCost";
 import { generatePriceSeries } from "@/lib/mockPriceHistory";
 import { assignVessel } from "@/lib/mockVessel";
@@ -21,6 +24,7 @@ const OTHER_REASON = "Other — specify";
 
 export default function ConfirmedView() {
   const { query, selectedDate } = useBookingQuery();
+  const { phase, loadingLabel, goTo, handleExitComplete } = useStageTransition();
 
   const [path, setPath] = useState(null); // null | "accept" | "reject"
   const [status, setStatus] = useState("idle"); // idle | submitting | submitted
@@ -104,7 +108,7 @@ export default function ConfirmedView() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(40% 30% at 50% 15%, rgba(217,164,65,0.06), transparent 70%)",
+            "radial-gradient(45% 35% at 50% 18%, rgba(217,164,65,0.08), transparent 70%)",
         }}
       />
 
@@ -113,82 +117,111 @@ export default function ConfirmedView() {
           Charter<span className="text-accent">·</span>IQ
         </Link>
 
-        <Reveal className="flex flex-col items-center text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
-            Booking confirmed
-          </p>
-          <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
-            One last thing.
-          </h1>
-          <p className="mt-3 max-w-md text-base text-text-muted">
-            Was this the right call? Your read helps tune future
-            recommendations.
-          </p>
-        </Reveal>
+        <AnimatePresence mode="wait" onExitComplete={handleExitComplete}>
+          {phase === "idle" && (
+            <motion.div
+              key="confirmed"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -18 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="flex w-full flex-col items-center"
+            >
+              <Reveal className="flex flex-col items-center text-center">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                  Booking confirmed
+                </p>
+                <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
+                  One last thing.
+                </h1>
+                <p className="mt-3 max-w-md text-base text-text-muted">
+                  Was this the right call? Your read helps tune future
+                  recommendations.
+                </p>
+              </Reveal>
 
-        <Reveal delay={0.06} className="mt-8 w-full">
-          <div className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 text-left sm:grid-cols-4">
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-                  Route
-                </dt>
-                <dd className="mt-1 text-sm font-semibold text-text">
-                  {query.pickupPort} → {query.dropPort}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-                  Date
-                </dt>
-                <dd className="mt-1 text-sm font-semibold text-text">{formatDate(finalDate)}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-                  Vessel
-                </dt>
-                <dd className="mt-1 text-sm font-semibold text-text">{vessel.name}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-                  Landing cost
-                </dt>
-                <dd className="mt-1 text-sm font-semibold text-text">
-                  {rateFormatter.format(finalRate)} / MT
-                  <span className="block font-normal text-text-muted">
-                    {totalFormatter.format(finalTotal)} total
-                  </span>
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </Reveal>
+              <Reveal delay={0.06} className="mt-8 w-full">
+                <div className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+                  <dl className="grid grid-cols-2 gap-x-6 gap-y-5 text-left sm:grid-cols-4">
+                    <div>
+                      <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                        Route
+                      </dt>
+                      <dd className="mt-1 text-sm font-semibold text-text">
+                        {query.pickupPort} → {query.dropPort}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                        Date
+                      </dt>
+                      <dd className="mt-1 text-sm font-semibold text-text">
+                        {formatDate(finalDate)}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                        Vessel
+                      </dt>
+                      <dd className="mt-1 text-sm font-semibold text-text">{vessel.name}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                        Landing cost
+                      </dt>
+                      <dd className="mt-1 text-sm font-semibold text-text">
+                        {rateFormatter.format(finalRate)} / MT
+                        <span className="block font-normal text-text-muted">
+                          {totalFormatter.format(finalTotal)} total
+                        </span>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </Reveal>
 
-        <Reveal delay={0.12} className="mt-6 w-full">
-          {status === "submitted" ? (
-            <SubmittedState path={path} />
-          ) : path === null ? (
-            <PromptState onChoose={setPath} />
-          ) : path === "accept" ? (
-            <AcceptForm
-              comment={comment}
-              onCommentChange={setComment}
-              onSubmit={handleAcceptSubmit}
-              onBack={startOver}
-              submitting={status === "submitting"}
-            />
-          ) : (
-            <RejectForm
-              reason={reason}
-              onReasonChange={setReason}
-              otherText={otherText}
-              onOtherTextChange={setOtherText}
-              onSubmit={handleRejectSubmit}
-              onBack={startOver}
-              submitting={status === "submitting"}
-            />
+              <Reveal delay={0.12} className="mt-6 w-full">
+                {status === "submitted" ? (
+                  <SubmittedState
+                    path={path}
+                    onStartOver={() => goTo("/dashboard", { loader: false })}
+                  />
+                ) : path === null ? (
+                  <PromptState onChoose={setPath} />
+                ) : path === "accept" ? (
+                  <AcceptForm
+                    comment={comment}
+                    onCommentChange={setComment}
+                    onSubmit={handleAcceptSubmit}
+                    onBack={startOver}
+                    submitting={status === "submitting"}
+                  />
+                ) : (
+                  <RejectForm
+                    reason={reason}
+                    onReasonChange={setReason}
+                    otherText={otherText}
+                    onOtherTextChange={setOtherText}
+                    onSubmit={handleRejectSubmit}
+                    onBack={startOver}
+                    submitting={status === "submitting"}
+                  />
+                )}
+              </Reveal>
+            </motion.div>
           )}
-        </Reveal>
+          {phase === "loading" && (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="flex min-h-[50vh] items-center justify-center"
+            >
+              <ShipLoader label={loadingLabel} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </main>
   );
@@ -320,7 +353,7 @@ function RejectForm({
   );
 }
 
-function SubmittedState({ path }) {
+function SubmittedState({ path, onStartOver }) {
   const message = path === "accept" ? "Feedback recorded." : "Feedback recorded — thank you.";
 
   return (
@@ -329,12 +362,13 @@ function SubmittedState({ path }) {
       <p className="mt-2 text-sm text-text-muted">
         This helps Charter-IQ get better at calling the market for you.
       </p>
-      <Link
-        href="/dashboard"
+      <button
+        type="button"
+        onClick={onStartOver}
         className="mt-6 inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
       >
         Start a new query
-      </Link>
+      </button>
     </div>
   );
 }

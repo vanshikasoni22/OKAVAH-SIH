@@ -67,3 +67,40 @@ body {
   outline-offset: 2px;
   border-radius: 1rem;
 }
+
+/* ShipLoader's bob + flowing-water motif — pure CSS so it costs nothing to
+   keep running during a stage transition, with its own reduced-motion guard
+   as a backstop (the component itself also skips showing this loader at all
+   when prefers-reduced-motion is set). */
+@keyframes ship-loader-bob {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(0, -3px) rotate(-2deg);
+  }
+}
+
+@keyframes ship-loader-wave-flow {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+.ship-loader-hull {
+  transform-origin: 60px 45px;
+  animation: ship-loader-bob 1.8s ease-in-out infinite;
+}
+
+.ship-loader-wave {
+  stroke-dasharray: 8 10;
+  animation: ship-loader-wave-flow 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ship-loader-hull,
+  .ship-loader-wave {
+    animation: none;
+  }
+}

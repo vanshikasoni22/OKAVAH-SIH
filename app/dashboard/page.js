@@ -7,12 +7,12 @@ export const metadata = {
 
 export default function DashboardPage() {
   return (
-    <main className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-bg px-6 py-20">
+    <main className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-bg px-6 py-16 sm:py-20">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(45% 35% at 50% 28%, rgba(217,164,65,0.08), transparent 70%)",
+            "radial-gradient(45% 35% at 50% 18%, rgba(217,164,65,0.08), transparent 70%)",
         }}
       />
 

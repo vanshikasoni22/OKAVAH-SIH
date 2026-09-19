@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "@/components/motion/Reveal";
+import ShipLoader from "@/components/ui/ShipLoader";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
-import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
+import { useStageTransition } from "@/lib/useStageTransition";
 import { computeLandingCost } from "@/lib/mockLandingCost";
 import { generatePriceSeries } from "@/lib/mockPriceHistory";
 import { assignVessel } from "@/lib/mockVessel";
@@ -15,9 +15,7 @@ import { formatDate, rateFormatter, totalFormatter } from "@/lib/format";
 
 export default function ConfirmView() {
   const { query, selectedDate } = useBookingQuery();
-  const router = useRouter();
-  const reduced = usePrefersReducedMotion();
-  const [leaving, setLeaving] = useState(false);
+  const { phase, loadingLabel, goTo, handleExitComplete } = useStageTransition();
 
   const result = useMemo(() => (query ? computeLandingCost(query) : null), [query]);
 
@@ -54,14 +52,6 @@ export default function ConfirmView() {
   const vessel = assignVessel(query.weight);
   const reasoning = explainSelection({ query, result, series, events, selectedPoint });
 
-  function handleConfirm() {
-    if (reduced) {
-      router.push("/dashboard/confirmed");
-      return;
-    }
-    setLeaving(true);
-  }
-
   return (
     <main className="relative flex min-h-[100svh] flex-col items-center overflow-hidden bg-bg px-6 py-16 sm:py-20">
       <div
@@ -77,8 +67,8 @@ export default function ConfirmView() {
           Charter<span className="text-accent">·</span>IQ
         </Link>
 
-        <AnimatePresence mode="wait" onExitComplete={() => router.push("/dashboard/confirmed")}>
-          {!leaving && (
+        <AnimatePresence mode="wait" onExitComplete={handleExitComplete}>
+          {phase === "idle" && (
             <motion.div
               key="confirm-review"
               initial={{ opacity: 0, y: 18 }}
@@ -167,20 +157,34 @@ export default function ConfirmView() {
                 delay={0.18}
                 className="mt-10 flex w-full flex-col-reverse items-center justify-center gap-4 sm:flex-row"
               >
-                <Link
-                  href="/dashboard/results"
+                <button
+                  type="button"
+                  onClick={() => goTo("/dashboard/results", { loader: false })}
                   className="inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-accent/30 hover:text-text"
                 >
                   Go back
-                </Link>
+                </button>
                 <button
                   type="button"
-                  onClick={handleConfirm}
+                  onClick={() =>
+                    goTo("/dashboard/confirmed", { label: "Locking in your booking…" })
+                  }
                   className="inline-flex items-center justify-center rounded-full bg-accent px-8 py-3.5 text-base font-semibold text-bg transition-transform duration-300 hover:scale-[1.02] hover:bg-accent-soft"
                 >
                   Confirm booking
                 </button>
               </Reveal>
+            </motion.div>
+          )}
+          {phase === "loading" && (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="flex min-h-[50vh] items-center justify-center"
+            >
+              <ShipLoader label={loadingLabel} />
             </motion.div>
           )}
         </AnimatePresence>

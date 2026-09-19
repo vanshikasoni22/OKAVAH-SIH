@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
-import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
+import { useStageTransition } from "@/lib/useStageTransition";
+import ShipLoader from "@/components/ui/ShipLoader";
 
 const PICKUP_PORTS = [
   "Newcastle (Australia)",
@@ -57,13 +57,11 @@ function Chevron() {
 }
 
 export default function BookingForm() {
-  const router = useRouter();
   const { setQuery } = useBookingQuery();
-  const reduced = usePrefersReducedMotion();
+  const { phase, loadingLabel, goTo, handleExitComplete } = useStageTransition();
 
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
-  const [leaving, setLeaving] = useState(false);
 
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -93,17 +91,12 @@ export default function BookingForm() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setQuery({ ...form, weight: Number(form.weight) });
-
-    if (reduced) {
-      router.push("/dashboard/results");
-      return;
-    }
-    setLeaving(true);
+    goTo("/dashboard/results", { label: "Charting the market…" });
   }
 
   return (
-    <AnimatePresence mode="wait" onExitComplete={() => router.push("/dashboard/results")}>
-      {!leaving && (
+    <AnimatePresence mode="wait" onExitComplete={handleExitComplete}>
+      {phase === "idle" && (
         <motion.div
           key="booking-query"
           initial={{ opacity: 0, y: 18 }}
@@ -229,6 +222,17 @@ export default function BookingForm() {
               </button>
             </div>
           </form>
+        </motion.div>
+      )}
+      {phase === "loading" && (
+        <motion.div
+          key="loading"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="flex min-h-[240px] items-center justify-center"
+        >
+          <ShipLoader label={loadingLabel} />
         </motion.div>
       )}
     </AnimatePresence>
