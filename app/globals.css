@@ -10,6 +10,7 @@
   --color-text-muted: #9c93b0;
   --color-hairline: rgba(243, 240, 249, 0.1);
   --color-warn: #e08a5c;
+  --color-down: #8f83d1;
 }
 
 @theme inline {
@@ -22,6 +23,7 @@
   --color-text-muted: var(--color-text-muted);
   --color-hairline: var(--color-hairline);
   --color-warn: var(--color-warn);
+  --color-down: var(--color-down);
   --font-display: var(--font-big-shoulders);
   --font-sans: var(--font-inter);
 }
@@ -44,4 +46,24 @@ body {
 ::selection {
   background: rgba(217, 164, 65, 0.35);
   color: var(--color-text);
+}
+
+/* Recharts renders internal layer groups with tabindex="-1" purely so it can
+   manage focus programmatically; they aren't real tab stops, so the browser's
+   default focus ring on them (which visually bounds unrelated sibling
+   markers) is just noise. Our own interactive marker elements draw their own
+   affordance instead. */
+.recharts-wrapper g:focus,
+.recharts-wrapper g:focus-visible {
+  outline: none;
+}
+
+/* The chart's root <svg> IS a real, keyboard-reachable tab stop — keep a
+   focus indicator for accessibility, just a softer, on-brand one instead of
+   the browser default. */
+.recharts-surface:focus,
+.recharts-surface:focus-visible {
+  outline: 2px solid rgba(217, 164, 65, 0.35);
+  outline-offset: 2px;
+  border-radius: 1rem;
 }

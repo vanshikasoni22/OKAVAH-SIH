@@ -1,10 +1,13 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Reveal from "@/components/motion/Reveal";
 import SignalPill from "@/components/ui/SignalPill";
+import PriceTrendChart from "@/components/dashboard/PriceTrendChart";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
 import { computeLandingCost } from "@/lib/mockLandingCost";
+import { generatePriceSeries } from "@/lib/mockPriceHistory";
 
 const rateFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -30,8 +33,20 @@ function formatDate(value) {
 
 export default function ResultsView() {
   const { query } = useBookingQuery();
+  const [selectedPoint, setSelectedPoint] = useState(null);
 
-  if (!query) {
+  const result = useMemo(() => (query ? computeLandingCost(query) : null), [query]);
+
+  const priceData = useMemo(() => {
+    if (!query || !result) return null;
+    return generatePriceSeries({
+      pickupPort: query.pickupPort,
+      dropPort: query.dropPort,
+      baseRate: result.ratePerMT,
+    });
+  }, [query, result]);
+
+  if (!query || !result || !priceData) {
     return (
       <main className="flex min-h-[100svh] flex-col items-center justify-center gap-6 bg-bg px-6 text-center">
         <p className="text-lg text-text-muted">
@@ -47,7 +62,15 @@ export default function ResultsView() {
     );
   }
 
-  const result = computeLandingCost(query);
+  const { series, events, todayIndex } = priceData;
+  const displayRate = selectedPoint ? selectedPoint.close : result.ratePerMT;
+  const displayTotal = displayRate * query.weight;
+  const selectedDate = selectedPoint ? selectedPoint.date : series[todayIndex].date;
+
+  function handleSelectDate(dateStr) {
+    const point = series.find((p) => p.date === dateStr);
+    if (point) setSelectedPoint(point);
+  }
 
   return (
     <main className="relative flex min-h-[100svh] flex-col items-center overflow-hidden bg-bg px-6 py-16 sm:py-20">
@@ -55,11 +78,11 @@ export default function ResultsView() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(45% 35% at 50% 22%, rgba(217,164,65,0.08), transparent 70%)",
+            "radial-gradient(45% 35% at 50% 18%, rgba(217,164,65,0.08), transparent 70%)",
         }}
       />
 
-      <div className="relative z-10 flex w-full max-w-3xl flex-col items-center">
+      <div className="relative z-10 flex w-full max-w-4xl flex-col items-center">
         <Link href="/" className="mb-10 font-display text-lg font-bold tracking-tight text-text">
           Charter<span className="text-accent">·</span>IQ
         </Link>
@@ -78,18 +101,27 @@ export default function ResultsView() {
           </div>
 
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
-            Landing cost
+            {selectedPoint ? `Rate for ${formatDate(selectedPoint.date)}` : "Landing cost"}
           </p>
           <div className="mt-4 flex flex-wrap items-baseline justify-center gap-x-3">
             <span className="font-display text-7xl font-bold leading-none tracking-tight text-text sm:text-8xl">
-              {rateFormatter.format(result.ratePerMT)}
+              {rateFormatter.format(displayRate)}
             </span>
             <span className="text-xl text-text-muted sm:text-2xl">/ MT</span>
           </div>
           <p className="mt-4 text-lg text-text-muted">
-            ≈ {totalFormatter.format(result.totalCost)} total for{" "}
+            ≈ {totalFormatter.format(displayTotal)} total for{" "}
             {query.weight.toLocaleString("en-IN")} MT
           </p>
+          {selectedPoint && (
+            <button
+              type="button"
+              onClick={() => setSelectedPoint(null)}
+              className="mt-2 text-sm text-accent-soft underline decoration-accent/40 underline-offset-4 transition-colors hover:text-accent"
+            >
+              ← Use today&apos;s recommended rate
+            </button>
+          )}
 
           <SignalPill className="mt-8 px-5 py-2 text-base">
             {result.recommendation.label}
@@ -98,14 +130,24 @@ export default function ResultsView() {
           <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-text-muted">
             {result.insight}
           </p>
-
-          <Link
-            href="/dashboard"
-            className="mt-12 inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
-          >
-            ← Edit query
-          </Link>
         </Reveal>
+
+        <Reveal delay={0.1} className="mt-14 w-full">
+          <PriceTrendChart
+            series={series}
+            events={events}
+            todayIndex={todayIndex}
+            selectedDate={selectedDate}
+            onSelectDate={handleSelectDate}
+          />
+        </Reveal>
+
+        <Link
+          href="/dashboard"
+          className="mt-12 inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
+        >
+          ← Edit query
+        </Link>
       </div>
     </main>
   );
