@@ -2,7 +2,22 @@
 
 import Link from "next/link";
 import Reveal from "@/components/motion/Reveal";
+import SignalPill from "@/components/ui/SignalPill";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
+import { computeLandingCost } from "@/lib/mockLandingCost";
+
+const rateFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const totalFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
 
 function formatDate(value) {
   if (!value) return value;
@@ -32,32 +47,66 @@ export default function ResultsView() {
     );
   }
 
+  const result = computeLandingCost(query);
+
   return (
-    <main className="flex min-h-[100svh] flex-col items-center justify-center bg-bg px-6 py-20 text-center">
-      <Reveal className="flex flex-col items-center">
-        <span className="inline-flex items-center gap-2.5 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent-soft">
-          Coming next
-        </span>
-        <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-text sm:text-5xl">
-          Crunching your landing cost.
-        </h1>
-        <p className="mx-auto mt-4 max-w-lg text-base text-text-muted">
-          {query.weight.toLocaleString("en-IN")} MT from{" "}
-          <span className="text-text">{query.pickupPort}</span> to{" "}
-          <span className="text-text">{query.dropPort}</span>,{" "}
-          {formatDate(query.startDate)} – {formatDate(query.endDate)}.
-        </p>
-        <p className="mt-2 max-w-lg text-sm text-text-muted">
-          Freight-rate forecasts, landed-cost breakdowns, and the optimal
-          booking window will live here next.
-        </p>
-        <Link
-          href="/dashboard"
-          className="mt-10 inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
-        >
-          ← Edit query
+    <main className="relative flex min-h-[100svh] flex-col items-center overflow-hidden bg-bg px-6 py-16 sm:py-20">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(45% 35% at 50% 22%, rgba(217,164,65,0.08), transparent 70%)",
+        }}
+      />
+
+      <div className="relative z-10 flex w-full max-w-3xl flex-col items-center">
+        <Link href="/" className="mb-10 font-display text-lg font-bold tracking-tight text-text">
+          Charter<span className="text-accent">·</span>IQ
         </Link>
-      </Reveal>
+
+        <Reveal className="flex w-full flex-col items-center text-center">
+          <div className="mb-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-text-muted">
+            <span className="text-text">{query.pickupPort}</span>
+            <span className="text-accent">→</span>
+            <span className="text-text">{query.dropPort}</span>
+            <span aria-hidden="true">·</span>
+            <span>
+              {formatDate(query.startDate)} – {formatDate(query.endDate)}
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>{query.weight.toLocaleString("en-IN")} MT</span>
+          </div>
+
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+            Landing cost
+          </p>
+          <div className="mt-4 flex flex-wrap items-baseline justify-center gap-x-3">
+            <span className="font-display text-7xl font-bold leading-none tracking-tight text-text sm:text-8xl">
+              {rateFormatter.format(result.ratePerMT)}
+            </span>
+            <span className="text-xl text-text-muted sm:text-2xl">/ MT</span>
+          </div>
+          <p className="mt-4 text-lg text-text-muted">
+            ≈ {totalFormatter.format(result.totalCost)} total for{" "}
+            {query.weight.toLocaleString("en-IN")} MT
+          </p>
+
+          <SignalPill className="mt-8 px-5 py-2 text-base">
+            {result.recommendation.label}
+          </SignalPill>
+
+          <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-text-muted">
+            {result.insight}
+          </p>
+
+          <Link
+            href="/dashboard"
+            className="mt-12 inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:text-accent-soft"
+          >
+            ← Edit query
+          </Link>
+        </Reveal>
+      </div>
     </main>
   );
 }
