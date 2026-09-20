@@ -33,7 +33,7 @@ export default function Problem() {
     <section className="relative bg-bg px-6 py-28 sm:py-36">
       <div className="mx-auto max-w-6xl">
         <Reveal>
-          <p className="max-w-3xl text-2xl font-medium leading-snug text-text sm:text-3xl">
+          <p className="max-w-3xl text-2xl font-medium leading-snug text-text sm:text-4xl">
             SAIL&apos;s East Coast coal imports rely on reactive, day-by-day
             spot chartering — no freight-rate foresight, no port-capability
             checks.
@@ -41,21 +41,30 @@ export default function Problem() {
         </Reveal>
 
         <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          {FACTS.map((fact, i) => (
-            <Reveal key={fact.title} delay={i * 0.06}>
-              <div className="group h-full rounded-2xl border border-hairline bg-surface p-6 transition-colors duration-300 hover:border-accent/40">
-                <div className="font-display text-2xl font-bold tracking-tight text-accent-soft transition-colors duration-300 group-hover:text-accent">
-                  {fact.stat}
+          {FACTS.map((fact, i) => {
+            const isLast = i === FACTS.length - 1;
+            return (
+              <Reveal key={fact.title} delay={i * 0.06}>
+                <div
+                  className={`group h-full rounded-2xl border p-6 transition-colors duration-300 ${
+                    isLast
+                      ? "border-accent/25 bg-gradient-to-b from-accent/[0.07] to-transparent hover:border-accent/50"
+                      : "border-hairline bg-surface hover:border-accent/40"
+                  }`}
+                >
+                  <div className="font-display text-2xl font-bold tracking-tight text-accent-soft transition-colors duration-300 group-hover:text-accent">
+                    {fact.stat}
+                  </div>
+                  <div className="mt-4 text-base font-semibold text-text">
+                    {fact.title}
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                    {fact.desc}
+                  </p>
                 </div>
-                <div className="mt-4 text-base font-semibold text-text">
-                  {fact.title}
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">
-                  {fact.desc}
-                </p>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>

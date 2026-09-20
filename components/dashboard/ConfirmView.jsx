@@ -31,7 +31,7 @@ export default function ConfirmView() {
   if (!query || !result || !priceData) {
     return (
       <main className="flex min-h-[100svh] flex-col items-center justify-center gap-6 bg-bg px-6 text-center">
-        <p className="text-lg text-text-muted">
+        <p className="text-xl text-text-muted">
           No booking query yet — start one to see landing costs.
         </p>
         <Link
@@ -63,7 +63,7 @@ export default function ConfirmView() {
       />
 
       <div className="relative z-10 flex w-full max-w-2xl flex-col items-center">
-        <Link href="/" className="mb-10 font-display text-lg font-bold tracking-tight text-text">
+        <Link href="/" className="mb-10 font-display text-xl font-bold tracking-tight text-text">
           Charter<span className="text-accent">·</span>IQ
         </Link>
 
@@ -78,10 +78,10 @@ export default function ConfirmView() {
               className="flex w-full flex-col items-center text-center"
             >
               <Reveal className="flex flex-col items-center">
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
                   Review &amp; confirm
                 </p>
-                <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
+                <h1 className="mt-3 font-display text-2xl font-bold tracking-tight text-text sm:text-4xl">
                   Ready to book?
                 </h1>
               </Reveal>
@@ -93,7 +93,7 @@ export default function ConfirmView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Route
                       </dt>
-                      <dd className="mt-1.5 text-lg font-semibold text-text">
+                      <dd className="mt-1.5 text-xl font-semibold text-text">
                         {query.pickupPort} → {query.dropPort}
                       </dd>
                     </div>
@@ -101,7 +101,7 @@ export default function ConfirmView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Date
                       </dt>
-                      <dd className="mt-1.5 text-lg font-semibold text-text">
+                      <dd className="mt-1.5 text-xl font-semibold text-text">
                         {formatDate(finalDate)}
                       </dd>
                     </div>
@@ -109,7 +109,7 @@ export default function ConfirmView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Vessel size
                       </dt>
-                      <dd className="mt-1.5 text-lg font-semibold text-text">
+                      <dd className="mt-1.5 text-xl font-semibold text-text">
                         {vessel.name}{" "}
                         <span className="text-sm font-normal text-text-muted">
                           · {vessel.dwt}
@@ -120,7 +120,7 @@ export default function ConfirmView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Cargo weight
                       </dt>
-                      <dd className="mt-1.5 text-lg font-semibold text-text">
+                      <dd className="mt-1.5 text-xl font-semibold text-text">
                         {query.weight.toLocaleString("en-IN")} MT
                       </dd>
                     </div>
@@ -131,10 +131,10 @@ export default function ConfirmView() {
                       Final landing cost
                     </p>
                     <div className="mt-2 flex flex-wrap items-baseline justify-center gap-x-2">
-                      <span className="font-display text-5xl font-bold tracking-tight text-text sm:text-6xl">
+                      <span className="font-display text-4xl font-bold tracking-tight text-text sm:text-6xl">
                         {rateFormatter.format(finalRate)}
                       </span>
-                      <span className="text-lg text-text-muted">/ MT</span>
+                      <span className="text-xl text-text-muted">/ MT</span>
                     </div>
                     <p className="mt-2 text-text-muted">
                       ≈ {totalFormatter.format(finalTotal)} total for{" "}

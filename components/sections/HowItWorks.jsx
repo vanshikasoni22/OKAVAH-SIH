@@ -23,7 +23,7 @@ export default function HowItWorks() {
     <section className="relative bg-surface px-6 py-28 sm:py-36">
       <div className="mx-auto max-w-6xl">
         <Reveal>
-          <h2 className="font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
+          <h2 className="font-display text-2xl font-bold tracking-tight text-text sm:text-4xl">
             How Charter-IQ works
           </h2>
         </Reveal>
@@ -32,7 +32,7 @@ export default function HowItWorks() {
           {STEPS.map((step, i) => (
             <Reveal key={step.index} delay={i * 0.08}>
               <div className="h-full border-t border-hairline pt-6">
-                <div className="font-display text-sm font-semibold tracking-[0.2em] text-accent">
+                <div className="font-display text-sm font-semibold tracking-[0.14em] text-accent">
                   {step.index}
                 </div>
                 <h3 className="mt-4 text-xl font-semibold text-text">

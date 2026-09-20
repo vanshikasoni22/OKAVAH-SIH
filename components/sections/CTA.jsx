@@ -10,12 +10,12 @@ export default function CTA() {
 
       <div className="relative z-10 mx-auto max-w-3xl text-center">
         <Reveal>
-          <h2 className="font-display text-3xl font-bold tracking-tight text-text sm:text-5xl">
+          <h2 className="font-display text-2xl font-bold tracking-tight text-text sm:text-6xl">
             Stop reacting to the market.
           </h2>
         </Reveal>
         <Reveal delay={0.08}>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-text-muted">
+          <p className="mx-auto mt-5 max-w-xl text-base text-text-muted sm:text-xl">
             Freight forecasts, landed costs, and port risk — in one view,
             with the reasoning shown at every step.
           </p>

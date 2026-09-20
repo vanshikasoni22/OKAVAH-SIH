@@ -168,7 +168,7 @@ export default function PriceTrendChart({ series, events, todayIndex, selectedDa
     <div className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
             Freight rate trend
           </p>
           <p className="mt-1 text-sm text-text-muted">
@@ -202,7 +202,7 @@ export default function PriceTrendChart({ series, events, todayIndex, selectedDa
             <XAxis
               dataKey="date"
               tickFormatter={formatChartDate}
-              tick={{ fill: "var(--color-text-muted)", fontSize: 11 }}
+              tick={{ fill: "var(--color-text-muted)", fontSize: 12, fontFamily: "var(--font-inter)" }}
               axisLine={{ stroke: "var(--color-hairline)" }}
               tickLine={false}
               interval="preserveStartEnd"
@@ -211,7 +211,7 @@ export default function PriceTrendChart({ series, events, todayIndex, selectedDa
             <YAxis
               orientation="right"
               domain={yDomain}
-              tick={{ fill: "var(--color-text-muted)", fontSize: 11 }}
+              tick={{ fill: "var(--color-text-muted)", fontSize: 12, fontFamily: "var(--font-inter)" }}
               tickFormatter={(v) => `$${Math.round(v)}`}
               axisLine={false}
               tickLine={false}

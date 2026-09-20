@@ -51,7 +51,7 @@ export default function Hero() {
         <h1 className="font-display text-[16vw] font-bold uppercase leading-[0.85] tracking-tight text-text sm:text-[10vw] lg:text-[7rem]">
           Charter<span className="text-accent">·</span>IQ
         </h1>
-        <p className="mt-6 max-w-xl text-balance text-lg text-text-muted sm:text-xl">
+        <p className="mt-6 max-w-xl text-balance text-base text-text-muted sm:text-xl">
           Know the market weeks out. Act, don&apos;t react.
         </p>
         <SignalPill className="mt-8" />

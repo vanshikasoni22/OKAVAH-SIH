@@ -26,6 +26,20 @@
   --color-down: var(--color-down);
   --font-display: var(--font-big-shoulders);
   --font-sans: var(--font-inter);
+
+  /* Type scale: 12 / 14 / 16 / 20 / 28 / 40 / 64. xs/sm/base/xl already land
+     on 12/14/16/20 in Tailwind's default scale; 2xl/4xl/6xl are retuned here
+     to hit 28/40/64 exactly (instead of the defaults' 24/36/60) so headings
+     read as one deliberate ladder rather than whatever the default scale
+     happened to produce. text-3xl/5xl/7xl/8xl are intentionally left alone
+     and unused outside the two true "display" moments (the wordmark, the
+     landing-cost figure) — everything else picks a rung on this ladder. */
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 1.25;
+  --text-4xl: 2.5rem;
+  --text-4xl--line-height: 1.1;
+  --text-6xl: 4rem;
+  --text-6xl--line-height: 0.96;
 }
 
 html {
@@ -39,13 +53,57 @@ html {
 }
 
 body {
+  position: relative;
   background: var(--color-bg);
   color: var(--color-text);
+}
+
+/* A near-flat dark fill reads as a placeholder unless something breaks up
+   the surface. This is a fixed, barely-there film grain (not a gradient) so
+   every screen has some texture instead of a single evenly-lit hex value —
+   subtle enough that no one section calls attention to it. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 ::selection {
   background: rgba(217, 164, 65, 0.35);
   color: var(--color-text);
+}
+
+/* One consistent focus treatment everywhere — a soft amber halo offset from
+   the element by a sliver of background. box-shadow follows whatever
+   border-radius the element already has (pill buttons stay pills, cards
+   stay cards), so this needs no radius of its own. Mouse clicks never
+   trigger :focus-visible on modern browsers, so this only shows up for
+   keyboard/AT users, which is exactly when it's needed. */
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 4px rgba(217, 164, 65, 0.7);
+}
+
+/* Native date-input affordances are the fastest way to tell a form was left
+   at browser defaults. The calendar glyph can't be recolored directly, so
+   this filter chain retargets Chromium's default near-black icon to the
+   accent amber instead of leaving it a mismatched gray square. */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.75;
+  filter: invert(70%) sepia(45%) saturate(500%) hue-rotate(345deg) brightness(96%);
+  transition: opacity 0.2s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 /* Recharts renders internal layer groups with tabindex="-1" purely so it can

@@ -106,7 +106,7 @@ export default function BookingForm() {
           className="w-full max-w-2xl"
         >
           <div className="mb-10 text-center">
-            <h1 className="font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
+            <h1 className="font-display text-2xl font-bold tracking-tight text-text sm:text-4xl">
               Where and when?
             </h1>
             <p className="mt-3 text-base text-text-muted">
@@ -166,7 +166,7 @@ export default function BookingForm() {
                   </Field>
                 </div>
 
-                <div className="flex items-center justify-center pt-8 text-lg text-accent sm:pt-9">
+                <div className="flex items-center justify-center pt-8 text-xl text-accent sm:pt-9">
                   <span className="sm:hidden">↓</span>
                   <span className="hidden sm:inline">→</span>
                 </div>

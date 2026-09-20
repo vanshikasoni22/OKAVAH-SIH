@@ -46,7 +46,7 @@ export default function ResultsView() {
   if (!query || !result || !priceData) {
     return (
       <main className="flex min-h-[100svh] flex-col items-center justify-center gap-6 bg-bg px-6 text-center">
-        <p className="text-lg text-text-muted">
+        <p className="text-xl text-text-muted">
           No booking query yet — start one to see landing costs.
         </p>
         <Link
@@ -81,7 +81,7 @@ export default function ResultsView() {
       />
 
       <div className="relative z-10 flex w-full max-w-4xl flex-col items-center">
-        <Link href="/" className="mb-10 font-display text-lg font-bold tracking-tight text-text">
+        <Link href="/" className="mb-10 font-display text-xl font-bold tracking-tight text-text">
           Charter<span className="text-accent">·</span>IQ
         </Link>
 
@@ -108,7 +108,7 @@ export default function ResultsView() {
                   <span>{query.weight.toLocaleString("en-IN")} MT</span>
                 </div>
 
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
                   {selectedPoint ? `Rate for ${formatDate(selectedPoint.date)}` : "Landing cost"}
                 </p>
                 <div className="mt-4 flex flex-wrap items-baseline justify-center gap-x-3">
@@ -117,7 +117,7 @@ export default function ResultsView() {
                   </span>
                   <span className="text-xl text-text-muted sm:text-2xl">/ MT</span>
                 </div>
-                <p className="mt-4 text-lg text-text-muted">
+                <p className="mt-4 text-xl text-text-muted">
                   ≈ {totalFormatter.format(displayTotal)} total for{" "}
                   {query.weight.toLocaleString("en-IN")} MT
                 </p>

@@ -46,7 +46,7 @@ export default function ConfirmedView() {
   if (!query || !result || !priceData) {
     return (
       <main className="flex min-h-[100svh] flex-col items-center justify-center gap-6 bg-bg px-6 text-center">
-        <p className="text-lg text-text-muted">
+        <p className="text-xl text-text-muted">
           No booking to review yet — start a query first.
         </p>
         <Link
@@ -113,7 +113,7 @@ export default function ConfirmedView() {
       />
 
       <div className="relative z-10 flex w-full max-w-2xl flex-col items-center">
-        <Link href="/" className="mb-10 font-display text-lg font-bold tracking-tight text-text">
+        <Link href="/" className="mb-10 font-display text-xl font-bold tracking-tight text-text">
           Charter<span className="text-accent">·</span>IQ
         </Link>
 
@@ -128,10 +128,10 @@ export default function ConfirmedView() {
               className="flex w-full flex-col items-center"
             >
               <Reveal className="flex flex-col items-center text-center">
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
                   Booking confirmed
                 </p>
-                <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
+                <h1 className="mt-3 font-display text-2xl font-bold tracking-tight text-text sm:text-4xl">
                   One last thing.
                 </h1>
                 <p className="mt-3 max-w-md text-base text-text-muted">
@@ -316,7 +316,7 @@ function RejectForm({
               value={option}
               checked={reason === option}
               onChange={(e) => onReasonChange(e.target.value)}
-              className="mt-0.5 accent-accent"
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer appearance-none rounded-full border-2 border-hairline bg-transparent transition-colors checked:border-accent checked:bg-accent"
             />
             <span className={reason === option ? "text-text" : undefined}>{option}</span>
           </label>
@@ -358,7 +358,7 @@ function SubmittedState({ path, onStartOver }) {
 
   return (
     <div className="rounded-2xl border border-accent/25 bg-accent/5 p-8 text-center">
-      <p className="text-lg font-semibold text-text">{message}</p>
+      <p className="text-xl font-semibold text-text">{message}</p>
       <p className="mt-2 text-sm text-text-muted">
         This helps Charter-IQ get better at calling the market for you.
       </p>
