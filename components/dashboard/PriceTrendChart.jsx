@@ -14,6 +14,7 @@ import {
   YAxis,
 } from "recharts";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
+import { FORECAST_HORIZONS } from "@/lib/mockPriceHistory";
 
 function formatChartDate(value) {
   if (!value) return value;
@@ -139,7 +140,15 @@ function FlagMarker({ cx, cy, event, eventKey, activeEvent, setActiveEvent, onSe
   );
 }
 
-export default function PriceTrendChart({ series, events, todayIndex, selectedDate, onSelectDate }) {
+export default function PriceTrendChart({
+  series,
+  events,
+  todayIndex,
+  selectedDate,
+  onSelectDate,
+  horizon,
+  onHorizonChange,
+}) {
   const reduced = usePrefersReducedMotion();
   const [activeEvent, setActiveEvent] = useState(null);
 
@@ -166,29 +175,49 @@ export default function PriceTrendChart({ series, events, todayIndex, selectedDa
 
   return (
     <div className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
             Freight rate trend
           </p>
           <p className="mt-1 text-sm text-text-muted">
-            Past 45 days · next 14 days projected — tap a date to price it.
+            Past 45 days · next {horizon} days projected — tap a date to price it.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-sm bg-accent" /> Up
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-sm bg-down" /> Down
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-sm border border-dashed border-text-muted" /> Forecast
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full border border-accent" /> Event
-          </span>
-        </div>
+
+        {onHorizonChange && (
+          <div className="inline-flex items-center gap-1 rounded-full border border-hairline bg-surface-2/60 p-1">
+            {FORECAST_HORIZONS.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => onHorizonChange(option)}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  option === horizon
+                    ? "bg-accent text-bg"
+                    : "text-text-muted hover:text-accent-soft"
+                }`}
+              >
+                {option}D
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm bg-accent" /> Up
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm bg-down" /> Down
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm border border-dashed border-text-muted" /> Forecast
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full border border-accent" /> Event
+        </span>
       </div>
 
       <div className="mt-6 h-[340px] w-full [&_.recharts-surface]:overflow-visible">

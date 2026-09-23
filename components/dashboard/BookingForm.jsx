@@ -5,21 +5,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
 import { useStageTransition } from "@/lib/useStageTransition";
 import ShipLoader from "@/components/ui/ShipLoader";
-
-const PICKUP_PORTS = [
-  "Newcastle (Australia)",
-  "Richards Bay (South Africa)",
-  "Hampton Roads (US)",
-  "Vostochny (Russia)",
-];
-
-const DROP_PORTS = ["Paradip", "Visakhapatnam", "Gangavaram", "Haldia", "Dhamra"];
+import QuickPresets from "@/components/dashboard/QuickPresets";
+import { PICKUP_PORTS, DROP_PORTS, COMMODITIES } from "@/lib/mockPortData";
 
 const INITIAL_FORM = {
   startDate: "",
   endDate: "",
   pickupPort: "",
   dropPort: "",
+  commodity: "",
   weight: "",
 };
 
@@ -76,6 +70,7 @@ export default function BookingForm() {
     }
     if (!values.pickupPort) next.pickupPort = "Choose a pickup port.";
     if (!values.dropPort) next.dropPort = "Choose a drop port.";
+    if (!values.commodity) next.commodity = "Choose a commodity.";
     if (!values.weight) {
       next.weight = "Cargo weight is required.";
     } else if (!(Number(values.weight) > 0)) {
@@ -84,14 +79,23 @@ export default function BookingForm() {
     return next;
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const nextErrors = validate(form);
+  function submitValues(values) {
+    const nextErrors = validate(values);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    setQuery({ ...form, weight: Number(form.weight) });
+    setQuery({ ...values, weight: Number(values.weight) });
     goTo("/dashboard/results", { label: "Charting the market…" });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    submitValues(form);
+  }
+
+  function applyPreset(values) {
+    setForm(values);
+    submitValues(values);
   }
 
   return (
@@ -103,7 +107,7 @@ export default function BookingForm() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -18 }}
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-2xl"
+          className="flex w-full max-w-2xl flex-col items-center"
         >
           <div className="mb-10 text-center">
             <h1 className="font-display text-2xl font-bold tracking-tight text-text sm:text-4xl">
@@ -114,10 +118,12 @@ export default function BookingForm() {
             </p>
           </div>
 
+          <QuickPresets onApply={applyPreset} />
+
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="rounded-3xl border border-hairline bg-surface p-8 sm:p-12"
+            className="w-full rounded-3xl border border-hairline bg-surface p-8 sm:p-12"
           >
             <div className="flex flex-col gap-8">
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -195,24 +201,47 @@ export default function BookingForm() {
                 </div>
               </div>
 
-              <Field label="Cargo weight (tonnes)" htmlFor="weight" error={errors.weight}>
-                <div className="relative">
-                  <input
-                    id="weight"
-                    type="number"
-                    min="0"
-                    step="any"
-                    inputMode="decimal"
-                    placeholder="e.g. 75,000"
-                    className={`${inputClass} pr-14`}
-                    value={form.weight}
-                    onChange={(e) => update("weight", e.target.value)}
-                  />
-                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-text-muted">
-                    MT
-                  </span>
-                </div>
-              </Field>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <Field label="Commodity" htmlFor="commodity" error={errors.commodity}>
+                  <div className="relative">
+                    <select
+                      id="commodity"
+                      className={selectClass}
+                      value={form.commodity}
+                      onChange={(e) => update("commodity", e.target.value)}
+                    >
+                      <option value="" disabled>
+                        Select commodity
+                      </option>
+                      {COMMODITIES.map((commodity) => (
+                        <option key={commodity} value={commodity}>
+                          {commodity}
+                        </option>
+                      ))}
+                    </select>
+                    <Chevron />
+                  </div>
+                </Field>
+
+                <Field label="Cargo weight (tonnes)" htmlFor="weight" error={errors.weight}>
+                  <div className="relative">
+                    <input
+                      id="weight"
+                      type="number"
+                      min="0"
+                      step="any"
+                      inputMode="decimal"
+                      placeholder="e.g. 75,000"
+                      className={`${inputClass} pr-14`}
+                      value={form.weight}
+                      onChange={(e) => update("weight", e.target.value)}
+                    />
+                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-text-muted">
+                      MT
+                    </span>
+                  </div>
+                </Field>
+              </div>
 
               <button
                 type="submit"

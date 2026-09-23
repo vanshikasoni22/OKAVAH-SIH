@@ -231,20 +231,23 @@ function PromptState({ onChoose }) {
   return (
     <div className="rounded-2xl border border-hairline bg-surface p-6 text-center sm:p-8">
       <p className="text-base font-medium text-text">How did this recommendation land?</p>
+      <p className="mx-auto mt-2 max-w-sm text-sm text-text-muted">
+        Log audit approval or override notes back to the optimization reward.
+      </p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <button
           type="button"
           onClick={() => onChoose("accept")}
           className="inline-flex items-center justify-center rounded-full border border-accent/40 bg-accent/10 px-6 py-3 text-sm font-semibold text-accent-soft transition-colors hover:border-accent/70 hover:text-accent"
         >
-          Accept — this works
+          Approve Rate
         </button>
         <button
           type="button"
           onClick={() => onChoose("reject")}
           className="inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-warn/50 hover:text-warn"
         >
-          Reject — not quite right
+          Override
         </button>
       </div>
     </div>
@@ -282,7 +285,7 @@ function AcceptForm({ comment, onCommentChange, onSubmit, onBack, submitting }) 
           disabled={submitting}
           className="inline-flex items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-bg transition-transform duration-300 hover:scale-[1.02] hover:bg-accent-soft disabled:opacity-60"
         >
-          {submitting ? "Submitting…" : "Submit feedback"}
+          {submitting ? "Logging…" : "Log approval"}
         </button>
       </div>
     </form>
@@ -346,7 +349,7 @@ function RejectForm({
           disabled={!reason || submitting}
           className="inline-flex items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-bg transition-transform duration-300 hover:scale-[1.02] hover:bg-accent-soft disabled:opacity-60"
         >
-          {submitting ? "Submitting…" : "Submit feedback"}
+          {submitting ? "Logging…" : "Log override"}
         </button>
       </div>
     </form>
@@ -354,13 +357,14 @@ function RejectForm({
 }
 
 function SubmittedState({ path, onStartOver }) {
-  const message = path === "accept" ? "Feedback recorded." : "Feedback recorded — thank you.";
+  const message = path === "accept" ? "Approval logged." : "Override logged — thank you.";
 
   return (
     <div className="rounded-2xl border border-accent/25 bg-accent/5 p-8 text-center">
       <p className="text-xl font-semibold text-text">{message}</p>
       <p className="mt-2 text-sm text-text-muted">
-        This helps Charter-IQ get better at calling the market for you.
+        This feeds back into the optimization reward, tuning future
+        recommendations.
       </p>
       <button
         type="button"

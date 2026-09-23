@@ -7,20 +7,30 @@ import Reveal from "@/components/motion/Reveal";
 import SignalPill from "@/components/ui/SignalPill";
 import ShipLoader from "@/components/ui/ShipLoader";
 import PriceTrendChart from "@/components/dashboard/PriceTrendChart";
+import VesselOptions from "@/components/dashboard/VesselOptions";
+import FeasibilityCheck from "@/components/dashboard/FeasibilityCheck";
+import ContractStrategy from "@/components/dashboard/ContractStrategy";
+import RiskPanel from "@/components/dashboard/RiskPanel";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
 import { useStageTransition } from "@/lib/useStageTransition";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { computeLandingCost } from "@/lib/mockLandingCost";
 import { generatePriceSeries } from "@/lib/mockPriceHistory";
+import { generateVesselOptions } from "@/lib/mockVesselOptions";
+import { checkFeasibility } from "@/lib/mockFeasibility";
+import { getContractStrategies } from "@/lib/mockContractStrategy";
+import { getRiskPanel } from "@/lib/mockRiskPanel";
 import { formatDate, rateFormatter, totalFormatter } from "@/lib/format";
 
 const CHART_LOAD_MS = 700;
+const DEFAULT_HORIZON = 14;
 
 export default function ResultsView() {
   const { query, selectedDate, setSelectedDate } = useBookingQuery();
   const { phase, loadingLabel, goTo, handleExitComplete } = useStageTransition();
   const reduced = usePrefersReducedMotion();
   const [chartReady, setChartReady] = useState(false);
+  const [horizon, setHorizon] = useState(DEFAULT_HORIZON);
 
   const result = useMemo(() => (query ? computeLandingCost(query) : null), [query]);
 
@@ -30,8 +40,21 @@ export default function ResultsView() {
       pickupPort: query.pickupPort,
       dropPort: query.dropPort,
       baseRate: result.ratePerMT,
+      projectionDays: horizon,
     });
+  }, [query, result, horizon]);
+
+  const vesselOptions = useMemo(() => {
+    if (!query || !result) return null;
+    return generateVesselOptions({ query, ratePerMT: result.ratePerMT });
   }, [query, result]);
+
+  const contractStrategies = useMemo(
+    () => (query ? getContractStrategies({ weight: query.weight }) : null),
+    [query]
+  );
+
+  const risk = useMemo(() => (query ? getRiskPanel(query) : null), [query]);
 
   useEffect(() => {
     if (!priceData) return;
@@ -43,7 +66,7 @@ export default function ResultsView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, reduced]);
 
-  if (!query || !result || !priceData) {
+  if (!query || !result || !priceData || !vesselOptions) {
     return (
       <main className="flex min-h-[100svh] flex-col items-center justify-center gap-6 bg-bg px-6 text-center">
         <p className="text-xl text-text-muted">
@@ -64,6 +87,8 @@ export default function ResultsView() {
   const displayRate = selectedPoint ? selectedPoint.close : result.ratePerMT;
   const displayTotal = displayRate * query.weight;
   const chartSelectedDate = selectedPoint ? selectedPoint.date : series[todayIndex].date;
+  const optimalVessel = vesselOptions[0];
+  const feasibility = checkFeasibility({ vesselName: optimalVessel.vesselName, dropPort: query.dropPort });
 
   function handleSelectDate(dateStr) {
     const point = series.find((p) => p.date === dateStr);
@@ -80,7 +105,7 @@ export default function ResultsView() {
         }}
       />
 
-      <div className="relative z-10 flex w-full max-w-4xl flex-col items-center">
+      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center">
         <Link href="/" className="mb-10 font-display text-xl font-bold tracking-tight text-text">
           Charter<span className="text-accent">·</span>IQ
         </Link>
@@ -100,6 +125,8 @@ export default function ResultsView() {
                   <span className="text-text">{query.pickupPort}</span>
                   <span className="text-accent">→</span>
                   <span className="text-text">{query.dropPort}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{query.commodity}</span>
                   <span aria-hidden="true">·</span>
                   <span>
                     {formatDate(query.startDate)} – {formatDate(query.endDate)}
@@ -140,7 +167,27 @@ export default function ResultsView() {
                 </p>
               </Reveal>
 
-              <Reveal delay={0.1} className="mt-14 w-full">
+              <Reveal delay={0.08} className="mt-14 w-full">
+                <VesselOptions options={vesselOptions} weight={query.weight} />
+              </Reveal>
+
+              <Reveal delay={0.12} className="mt-8 w-full">
+                <FeasibilityCheck
+                  feasibility={feasibility}
+                  vesselName={optimalVessel.vesselName}
+                  dropPort={query.dropPort}
+                />
+              </Reveal>
+
+              <Reveal delay={0.16} className="mt-14 w-full">
+                <ContractStrategy strategies={contractStrategies} />
+              </Reveal>
+
+              <Reveal delay={0.2} className="mt-14 w-full">
+                <RiskPanel risk={risk} />
+              </Reveal>
+
+              <Reveal delay={0.24} className="mt-14 w-full">
                 {chartReady ? (
                   <PriceTrendChart
                     series={series}
@@ -148,6 +195,8 @@ export default function ResultsView() {
                     todayIndex={todayIndex}
                     selectedDate={chartSelectedDate}
                     onSelectDate={handleSelectDate}
+                    horizon={horizon}
+                    onHorizonChange={setHorizon}
                   />
                 ) : (
                   <div className="flex h-[420px] items-center justify-center rounded-3xl border border-hairline bg-surface sm:h-[460px]">
@@ -157,7 +206,7 @@ export default function ResultsView() {
               </Reveal>
 
               <Reveal
-                delay={0.15}
+                delay={0.28}
                 className="mt-12 flex flex-col-reverse items-center gap-4 sm:flex-row"
               >
                 <button
