@@ -23,12 +23,14 @@ import { getRiskPanel } from "@/lib/mockRiskPanel";
 import { formatDate, rateFormatter, totalFormatter } from "@/lib/format";
 
 const CHART_LOAD_MS = 700;
+const RANKING_LOAD_MS = 550;
 const DEFAULT_HORIZON = 14;
 
 export default function ResultsView() {
   const { query, selectedDate, setSelectedDate } = useBookingQuery();
   const { phase, loadingLabel, goTo, handleExitComplete } = useStageTransition();
   const reduced = usePrefersReducedMotion();
+  const [analysisReady, setAnalysisReady] = useState(false);
   const [chartReady, setChartReady] = useState(false);
   const [horizon, setHorizon] = useState(DEFAULT_HORIZON);
 
@@ -55,6 +57,16 @@ export default function ResultsView() {
   );
 
   const risk = useMemo(() => (query ? getRiskPanel(query) : null), [query]);
+
+  useEffect(() => {
+    if (!vesselOptions) return;
+    const timer = window.setTimeout(
+      () => setAnalysisReady(true),
+      reduced ? 0 : RANKING_LOAD_MS
+    );
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, reduced]);
 
   useEffect(() => {
     if (!priceData) return;
@@ -167,25 +179,35 @@ export default function ResultsView() {
                 </p>
               </Reveal>
 
-              <Reveal delay={0.08} className="mt-14 w-full">
-                <VesselOptions options={vesselOptions} weight={query.weight} />
-              </Reveal>
+              {analysisReady ? (
+                <>
+                  <Reveal delay={0.08} className="mt-14 w-full">
+                    <VesselOptions options={vesselOptions} weight={query.weight} />
+                  </Reveal>
 
-              <Reveal delay={0.12} className="mt-8 w-full">
-                <FeasibilityCheck
-                  feasibility={feasibility}
-                  vesselName={optimalVessel.vesselName}
-                  dropPort={query.dropPort}
-                />
-              </Reveal>
+                  <Reveal delay={0.12} className="mt-8 w-full">
+                    <FeasibilityCheck
+                      feasibility={feasibility}
+                      vesselName={optimalVessel.vesselName}
+                      dropPort={query.dropPort}
+                    />
+                  </Reveal>
 
-              <Reveal delay={0.16} className="mt-14 w-full">
-                <ContractStrategy strategies={contractStrategies} />
-              </Reveal>
+                  <Reveal delay={0.16} className="mt-14 w-full">
+                    <ContractStrategy strategies={contractStrategies} />
+                  </Reveal>
 
-              <Reveal delay={0.2} className="mt-14 w-full">
-                <RiskPanel risk={risk} />
-              </Reveal>
+                  <Reveal delay={0.2} className="mt-14 w-full">
+                    <RiskPanel risk={risk} />
+                  </Reveal>
+                </>
+              ) : (
+                <Reveal delay={0.08} className="mt-14 w-full">
+                  <div className="flex h-[280px] items-center justify-center rounded-3xl border border-hairline bg-surface">
+                    <ShipLoader label="Ranking vessel options…" />
+                  </div>
+                </Reveal>
+              )}
 
               <Reveal delay={0.24} className="mt-14 w-full">
                 {chartReady ? (

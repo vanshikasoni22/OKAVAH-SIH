@@ -141,7 +141,7 @@ export default function ConfirmedView() {
               </Reveal>
 
               <Reveal delay={0.06} className="mt-8 w-full">
-                <div className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+                <div className="sheen rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
                   <dl className="grid grid-cols-2 gap-x-6 gap-y-5 text-left sm:grid-cols-4">
                     <div>
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
@@ -229,7 +229,7 @@ export default function ConfirmedView() {
 
 function PromptState({ onChoose }) {
   return (
-    <div className="rounded-2xl border border-hairline bg-surface p-6 text-center sm:p-8">
+    <div className="sheen rounded-2xl border border-hairline bg-surface p-6 text-center sm:p-8">
       <p className="text-base font-medium text-text">How did this recommendation land?</p>
       <p className="mx-auto mt-2 max-w-sm text-sm text-text-muted">
         Log audit approval or override notes back to the optimization reward.
@@ -258,7 +258,7 @@ function AcceptForm({ comment, onCommentChange, onSubmit, onBack, submitting }) 
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-hairline bg-surface p-6 text-left sm:p-8"
+      className="sheen rounded-2xl border border-hairline bg-surface p-6 text-left sm:p-8"
     >
       <label htmlFor="accept-comment" className="text-sm font-medium text-text">
         Anything about this recommendation worth noting?{" "}
@@ -304,7 +304,7 @@ function RejectForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-hairline bg-surface p-6 text-left sm:p-8"
+      className="sheen rounded-2xl border border-hairline bg-surface p-6 text-left sm:p-8"
     >
       <p className="text-sm font-medium text-text">What did the system miss?</p>
       <div className="mt-4 flex flex-col gap-3">
@@ -360,7 +360,7 @@ function SubmittedState({ path, onStartOver }) {
   const message = path === "accept" ? "Approval logged." : "Override logged — thank you.";
 
   return (
-    <div className="rounded-2xl border border-accent/25 bg-accent/5 p-8 text-center">
+    <div className="sheen rounded-2xl border border-accent/25 bg-accent/5 p-8 text-center">
       <p className="text-xl font-semibold text-text">{message}</p>
       <p className="mt-2 text-sm text-text-muted">
         This feeds back into the optimization reward, tuning future

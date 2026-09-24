@@ -49,7 +49,7 @@ export default function Problem() {
                   className={`group h-full rounded-2xl border p-6 transition-colors duration-300 ${
                     isLast
                       ? "border-accent/25 bg-gradient-to-b from-accent/[0.07] to-transparent hover:border-accent/50"
-                      : "border-hairline bg-surface hover:border-accent/40"
+                      : "sheen border-hairline bg-surface hover:border-accent/40"
                   }`}
                 >
                   <div className="font-display text-2xl font-bold tracking-tight text-accent-soft transition-colors duration-300 group-hover:text-accent">

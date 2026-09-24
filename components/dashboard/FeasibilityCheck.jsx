@@ -3,7 +3,7 @@ export default function FeasibilityCheck({ feasibility, vesselName, dropPort }) 
 
   return (
     <div
-      className={`w-full rounded-2xl border p-6 ${
+      className={`sheen w-full rounded-2xl border p-6 ${
         passed ? "border-accent/25 bg-accent/5" : "border-warn/40 bg-warn/5"
       }`}
     >
@@ -30,7 +30,7 @@ export default function FeasibilityCheck({ feasibility, vesselName, dropPort }) 
         {checks.map((check) => (
           <div
             key={check.label}
-            className="rounded-xl border border-hairline bg-surface-2/50 px-3 py-2.5 text-center"
+            className="sheen rounded-xl border border-hairline bg-surface-2/50 px-3 py-2.5 text-center"
           >
             <p className="text-xs text-text-muted">{check.label}</p>
             <p className={`mt-1 text-sm font-semibold ${check.pass ? "text-text" : "text-warn"}`}>

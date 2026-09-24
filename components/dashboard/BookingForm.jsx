@@ -123,7 +123,7 @@ export default function BookingForm() {
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="w-full rounded-3xl border border-hairline bg-surface p-8 sm:p-12"
+            className="sheen w-full rounded-3xl border border-hairline bg-surface p-8 sm:p-12"
           >
             <div className="flex flex-col gap-8">
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

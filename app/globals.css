@@ -52,30 +52,36 @@ html {
   }
 }
 
+/* One system for "this isn't a flat color fill": every screen's amber
+   radial glow (see each page's own background) plus the same top-down
+   sheen on every raised card surface (see .sheen below). Deliberately not
+   mixed with a grain/noise layer too — one depth cue, applied everywhere,
+   beats two half-visible ones.
+
+   Numbers are the product here too — freight rates, totals, deltas —
+   so tabular figures keep digits aligned in columns instead of the
+   default proportional spacing that makes a column of dollar amounts
+   wobble. */
 body {
   position: relative;
   background: var(--color-bg);
   color: var(--color-text);
-}
-
-/* A near-flat dark fill reads as a placeholder unless something breaks up
-   the surface. This is a fixed, barely-there film grain (not a gradient) so
-   every screen has some texture instead of a single evenly-lit hex value —
-   subtle enough that no one section calls attention to it. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  font-variant-numeric: tabular-nums;
 }
 
 ::selection {
   background: rgba(217, 164, 65, 0.35);
   color: var(--color-text);
+}
+
+/* The one depth treatment for every card/panel surface in the app: a soft
+   top-down highlight, like light grazing the top edge of a raised panel.
+   Deliberately just a background-image (not background-color), so it
+   composes with whatever bg-surface/bg-surface-2/bg-accent-5 utility is
+   already on the element instead of replacing it — add the class, don't
+   restructure the element. */
+.sheen {
+  background-image: linear-gradient(180deg, rgba(243, 240, 249, 0.035), transparent 45%);
 }
 
 /* One consistent focus treatment everywhere — a soft amber halo offset from

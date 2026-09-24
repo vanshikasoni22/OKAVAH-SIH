@@ -18,20 +18,28 @@ function VesselOptionCard({ option, weight }) {
 
   return (
     <div
-      className={`flex h-full flex-col rounded-2xl border p-6 ${
-        isOptimal ? "border-accent/30" : "border-hairline bg-surface"
+      className={`relative flex h-full flex-col rounded-2xl border ${
+        isOptimal
+          ? "z-10 border-accent/35 p-7 shadow-[0_0_48px_-16px_rgba(217,164,65,0.45)] lg:scale-[1.03]"
+          : "sheen border-hairline bg-surface p-6"
       }`}
       style={
         isOptimal
           ? {
               background:
-                "radial-gradient(120% 100% at 8% 0%, rgba(217,164,65,0.1), transparent 60%), var(--color-surface)",
+                "radial-gradient(120% 100% at 8% 0%, rgba(217,164,65,0.12), transparent 60%), var(--color-surface)",
             }
           : undefined
       }
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="font-display text-lg font-bold text-text-muted">#{option.rank}</span>
+        <span
+          className={`font-display text-lg font-bold ${
+            isOptimal ? "text-accent-soft" : "text-text-muted"
+          }`}
+        >
+          #{option.rank}
+        </span>
         <span
           className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
             isOptimal ? "bg-accent/15 text-accent-soft" : "bg-surface-2 text-text-muted"
@@ -48,7 +56,9 @@ function VesselOptionCard({ option, weight }) {
         <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">
           Total landing cost
         </p>
-        <p className="mt-1 font-display text-2xl font-bold text-text">
+        <p
+          className={`mt-1 font-display font-bold text-text ${isOptimal ? "text-4xl" : "text-2xl"}`}
+        >
           {totalFormatter.format(option.totalCost)}
         </p>
         <p className="text-xs text-text-muted">

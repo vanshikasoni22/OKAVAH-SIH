@@ -87,7 +87,7 @@ export default function ConfirmView() {
               </Reveal>
 
               <Reveal delay={0.06} className="mt-8 w-full">
-                <div className="rounded-3xl border border-hairline bg-surface p-8 sm:p-10">
+                <div className="sheen rounded-3xl border border-hairline bg-surface p-8 sm:p-10">
                   <dl className="grid grid-cols-1 gap-6 text-left sm:grid-cols-2">
                     <div>
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
@@ -145,7 +145,7 @@ export default function ConfirmView() {
               </Reveal>
 
               <Reveal delay={0.12} className="mt-6 w-full">
-                <div className="rounded-2xl border border-accent/25 bg-accent/5 p-6 text-left">
+                <div className="sheen rounded-2xl border border-accent/25 bg-accent/5 p-6 text-left">
                   <p className="text-sm font-semibold uppercase tracking-widest text-accent-soft">
                     Why this works
                   </p>
@@ -162,7 +162,7 @@ export default function ConfirmView() {
                   onClick={() => goTo("/dashboard/results", { loader: false })}
                   className="inline-flex items-center justify-center rounded-full border border-hairline px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-accent/30 hover:text-text"
                 >
-                  Go back
+                  ← Back to results
                 </button>
                 <button
                   type="button"

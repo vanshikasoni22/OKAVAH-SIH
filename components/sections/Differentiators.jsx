@@ -27,7 +27,7 @@ export default function Differentiators() {
             return (
               <Reveal key={point.title} delay={i * 0.1}>
                 <div
-                  className={`h-full rounded-2xl border p-8 ${
+                  className={`sheen h-full rounded-2xl border p-8 ${
                     isFirst
                       ? "border-accent/20 bg-surface-2"
                       : "border-hairline bg-surface-2/60"

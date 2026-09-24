@@ -14,7 +14,7 @@ export default function ContractStrategy({ strategies }) {
           return (
             <div
               key={strategy.id}
-              className={`h-full rounded-2xl border p-6 ${
+              className={`sheen h-full rounded-2xl border p-6 ${
                 isRecommended ? "border-accent/30 bg-surface" : "border-hairline bg-surface-2/60"
               }`}
             >

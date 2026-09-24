@@ -174,7 +174,7 @@ export default function PriceTrendChart({
   }
 
   return (
-    <div className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+    <div className="sheen rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">

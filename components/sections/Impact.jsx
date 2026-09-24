@@ -40,7 +40,7 @@ export default function Impact() {
 
           {STATS.map((stat, i) => (
             <Reveal key={stat.label} delay={0.05 + i * 0.05}>
-              <div className="flex h-full flex-col justify-between rounded-2xl border border-hairline bg-surface p-6">
+              <div className="sheen flex h-full flex-col justify-between rounded-2xl border border-hairline bg-surface p-6">
                 <div className="font-display text-2xl font-bold tracking-tight text-text">
                   {stat.value}
                 </div>

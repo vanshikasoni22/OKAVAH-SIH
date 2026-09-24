@@ -1,7 +1,11 @@
+// A real three-step ramp, not one color at three opacities: Low reads calm
+// (the same amber the rest of the app uses for "this is fine"), Medium
+// shifts hue entirely into the warn tone, High keeps that hue but adds
+// weight and a border so it doesn't rely on color alone to read as worse.
 const LEVEL_STYLES = {
-  Low: "bg-accent/15 text-accent-soft",
-  Medium: "bg-warn/15 text-warn",
-  High: "bg-warn/25 text-warn",
+  Low: "border border-accent/25 bg-accent/10 text-accent-soft",
+  Medium: "border border-warn/25 bg-warn/10 text-warn",
+  High: "border border-warn/60 bg-warn/20 font-bold text-warn",
 };
 
 function LevelTag({ level }) {
@@ -39,7 +43,7 @@ export default function RiskPanel({ risk }) {
   ];
 
   return (
-    <div className="w-full rounded-2xl border border-hairline bg-surface p-6 sm:p-8">
+    <div className="sheen w-full rounded-2xl border border-hairline bg-surface p-6 sm:p-8">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
         Risk &amp; demurrage
       </p>
@@ -48,7 +52,7 @@ export default function RiskPanel({ risk }) {
         {metrics.map((metric) => (
           <div
             key={metric.label}
-            className="flex items-center justify-between rounded-xl border border-hairline bg-surface-2/50 px-4 py-3"
+            className="sheen flex items-center justify-between rounded-xl border border-hairline bg-surface-2/50 px-4 py-3"
           >
             <div>
               <p className="text-sm text-text-muted">{metric.label}</p>
