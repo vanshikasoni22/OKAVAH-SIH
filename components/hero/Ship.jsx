@@ -6,6 +6,7 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import Wake from "./Wake";
+import ContactShadow from "./ContactShadow";
 
 const MODEL_BASE = "/models/cruiser-2012/";
 const TARGET_LENGTH = 15.5;
@@ -74,14 +75,21 @@ export default function Ship() {
     group.current.position.y = Math.sin(t * 0.45) * 0.16;
     group.current.rotation.z = Math.sin(t * 0.3) * 0.018;
     group.current.rotation.x = Math.sin(t * 0.22 + 1.4) * 0.01;
-    group.current.position.x = Math.sin(t * 0.045) * 2.2;
-    group.current.position.z = Math.cos(t * 0.03) * 1.1 - 1;
+    // Shorter periods than a purely decorative bob so the hull covers a
+    // clearly visible stretch of water within a viewer's ~25s dwell on the
+    // hero, instead of an oscillation too slow to read as travel. The yaw
+    // drift reads as the ship gently steering, reinforcing that it's
+    // actually underway rather than bobbing in place.
+    group.current.position.x = Math.sin(t * 0.11) * 3.1;
+    group.current.position.z = Math.cos(t * 0.07) * 1.6 - 1;
+    group.current.rotation.y = -Math.PI * 0.13 + Math.sin(t * 0.085) * 0.14;
   });
 
   return (
     <group ref={group} rotation={[0, -Math.PI * 0.13, 0]}>
       <primitive object={ship} />
       <Wake anchorX={-halfLength} />
+      <ContactShadow length={halfLength * 2.2} />
     </group>
   );
 }

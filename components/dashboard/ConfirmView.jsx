@@ -87,8 +87,8 @@ export default function ConfirmView() {
               </Reveal>
 
               <Reveal delay={0.06} className="mt-8 w-full">
-                <div className="sheen rounded-3xl border border-hairline bg-surface p-8 sm:p-10">
-                  <dl className="grid grid-cols-1 gap-6 text-left sm:grid-cols-2">
+                <div className="sheen rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+                  <dl className="grid grid-cols-1 gap-5 text-left sm:grid-cols-2">
                     <div>
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Route
@@ -101,7 +101,7 @@ export default function ConfirmView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Date
                       </dt>
-                      <dd className="mt-1.5 text-xl font-semibold text-text">
+                      <dd className="mt-1.5 font-mono text-xl font-semibold text-text">
                         {formatDate(finalDate)}
                       </dd>
                     </div>
@@ -120,23 +120,23 @@ export default function ConfirmView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Cargo weight
                       </dt>
-                      <dd className="mt-1.5 text-xl font-semibold text-text">
+                      <dd className="mt-1.5 font-mono text-xl font-semibold text-text">
                         {query.weight.toLocaleString("en-IN")} MT
                       </dd>
                     </div>
                   </dl>
 
-                  <div className="mt-8 border-t border-hairline pt-8 text-center">
+                  <div className="mt-6 border-t border-hairline pt-6 text-center">
                     <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                       Final landing cost
                     </p>
                     <div className="mt-2 flex flex-wrap items-baseline justify-center gap-x-2">
-                      <span className="font-display text-4xl font-bold tracking-tight text-text sm:text-6xl">
+                      <span className="font-mono text-4xl font-bold tracking-tight text-text sm:text-6xl">
                         {rateFormatter.format(finalRate)}
                       </span>
                       <span className="text-xl text-text-muted">/ MT</span>
                     </div>
-                    <p className="mt-2 text-text-muted">
+                    <p className="mt-2 font-mono text-text-muted">
                       ≈ {totalFormatter.format(finalTotal)} total for{" "}
                       {query.weight.toLocaleString("en-IN")} MT
                     </p>

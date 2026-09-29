@@ -20,8 +20,8 @@ function VesselOptionCard({ option, weight }) {
     <div
       className={`relative flex h-full flex-col rounded-2xl border ${
         isOptimal
-          ? "z-10 border-accent/35 p-7 shadow-[0_0_48px_-16px_rgba(217,164,65,0.45)] lg:scale-[1.03]"
-          : "sheen border-hairline bg-surface p-6"
+          ? "z-10 border-accent/35 p-6 shadow-[0_0_48px_-16px_rgba(217,164,65,0.45)] lg:scale-[1.03]"
+          : "sheen border-hairline bg-surface p-5"
       }`}
       style={
         isOptimal
@@ -52,29 +52,31 @@ function VesselOptionCard({ option, weight }) {
       <p className="mt-3 text-xl font-semibold text-text">{option.vesselName}</p>
       <p className="text-xs text-text-muted">{option.dwt}</p>
 
-      <div className="mt-4 border-t border-hairline pt-4">
+      <div className="mt-3 border-t border-hairline pt-3">
         <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">
           Total landing cost
         </p>
         <p
-          className={`mt-1 font-display font-bold text-text ${isOptimal ? "text-4xl" : "text-2xl"}`}
+          className={`mt-1 font-mono font-bold text-text ${isOptimal ? "text-4xl" : "text-2xl"}`}
         >
           {totalFormatter.format(option.totalCost)}
         </p>
-        <p className="text-xs text-text-muted">
+        <p className="font-mono text-xs text-text-muted">
           {rateFormatter.format(option.totalCost / weight)} / MT
         </p>
       </div>
 
-      <div className="mt-4 flex flex-col gap-1.5 border-t border-hairline pt-4 text-sm">
+      <div className="mt-3 flex flex-col divide-y divide-hairline/70 border-t border-hairline text-sm">
         {BREAKDOWN_ROWS.map(({ key, label }) => {
           const value = option.breakdown[key];
           const isAdj = key === "scaleAdj";
           return (
-            <div key={key} className="flex items-center justify-between gap-2">
+            <div key={key} className="flex items-center justify-between gap-2 py-1.5">
               <span className="text-text-muted">{label}</span>
               <span
-                className={isAdj ? (value < 0 ? "text-accent-soft" : "text-warn") : "text-text"}
+                className={`font-mono ${
+                  isAdj ? (value < 0 ? "text-accent-soft" : "text-warn") : "text-text"
+                }`}
               >
                 {isAdj ? formatDelta(value) : totalFormatter.format(value)}
               </span>
@@ -83,7 +85,7 @@ function VesselOptionCard({ option, weight }) {
         })}
       </div>
 
-      <p className="mt-4 border-t border-hairline pt-4 text-sm leading-relaxed text-text-muted">
+      <p className="mt-3 border-t border-hairline pt-3 text-sm leading-relaxed text-text-muted">
         {option.insight}
       </p>
     </div>

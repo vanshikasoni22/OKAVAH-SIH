@@ -84,11 +84,11 @@ function OhlcTooltip({ active, payload, suppressed }) {
 
   return (
     <div className="rounded-xl border border-hairline bg-surface-2/95 px-3 py-2 text-xs shadow-xl backdrop-blur-sm">
-      <p className="font-semibold text-text">
+      <p className="font-mono font-semibold text-text">
         {formatChartDate(point.date)}
-        {point.isProjected && <span className="text-text-muted"> · forecast</span>}
+        {point.isProjected && <span className="font-sans text-text-muted"> · forecast</span>}
       </p>
-      <div className="mt-1.5 grid grid-cols-2 gap-x-4 gap-y-0.5 text-text-muted">
+      <div className="mt-1.5 grid grid-cols-2 gap-x-4 gap-y-0.5 font-mono text-text-muted">
         <span>
           O <span className="text-text">${point.open.toFixed(2)}</span>
         </span>
@@ -174,7 +174,7 @@ export default function PriceTrendChart({
   }
 
   return (
-    <div className="sheen rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+    <div className="sheen rounded-3xl border border-hairline bg-surface p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
@@ -231,7 +231,7 @@ export default function PriceTrendChart({
             <XAxis
               dataKey="date"
               tickFormatter={formatChartDate}
-              tick={{ fill: "var(--color-text-muted)", fontSize: 12, fontFamily: "var(--font-inter)" }}
+              tick={{ fill: "var(--color-text-muted)", fontSize: 11, fontFamily: "var(--font-jetbrains-mono)" }}
               axisLine={{ stroke: "var(--color-hairline)" }}
               tickLine={false}
               interval="preserveStartEnd"
@@ -240,7 +240,7 @@ export default function PriceTrendChart({
             <YAxis
               orientation="right"
               domain={yDomain}
-              tick={{ fill: "var(--color-text-muted)", fontSize: 12, fontFamily: "var(--font-inter)" }}
+              tick={{ fill: "var(--color-text-muted)", fontSize: 11, fontFamily: "var(--font-jetbrains-mono)" }}
               tickFormatter={(v) => `$${Math.round(v)}`}
               axisLine={false}
               tickLine={false}

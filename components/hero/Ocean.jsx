@@ -45,9 +45,11 @@ const vertexShader = `
 const fragmentShader = `
   uniform vec3 uDeepColor;
   uniform vec3 uShallowColor;
+  uniform vec3 uSkyColor;
   uniform vec3 uFoamColor;
   uniform vec3 uSunDirection;
   uniform float uOpacity;
+  uniform float uCameraDist;
 
   varying vec3 vNormal;
   varying vec3 vWorldPos;
@@ -57,28 +59,46 @@ const fragmentShader = `
     vec3 normal = normalize(vNormal);
     vec3 viewDir = normalize(cameraPosition - vWorldPos);
 
-    float fresnel = pow(1.0 - clamp(dot(normal, viewDir), 0.0, 1.0), 3.0);
-    vec3 baseColor = mix(uDeepColor, uShallowColor, fresnel * 0.85);
+    // Base water tone: distinctly lighter than the void behind it so the
+    // plane reads as a surface even where nothing else lights it up.
+    float fresnel = pow(1.0 - clamp(dot(normal, viewDir), 0.0, 1.0), 2.2);
+    vec3 baseColor = mix(uDeepColor, uShallowColor, fresnel);
 
+    // Broad, soft sky-light sheen at grazing angles — a cheap stand-in for a
+    // true planar reflection: the water picks up the same amber-lit purple
+    // sky tone the ship itself is lit by, instead of staying a flat fill.
+    vec3 skySheen = uSkyColor * fresnel * 0.55;
+
+    // Two specular lobes: a tight hot glint plus a much wider, softer sheen,
+    // so sunlight reads as a glittering patch across the water rather than
+    // one pinpoint that's only visible from a single angle.
     vec3 halfVec = normalize(uSunDirection + viewDir);
-    float spec = pow(max(dot(normal, halfVec), 0.0), 70.0);
-    vec3 specColor = uFoamColor * spec * 1.8;
+    float specSharp = pow(max(dot(normal, halfVec), 0.0), 48.0);
+    float specWide = pow(max(dot(normal, halfVec), 0.0), 6.0);
+    vec3 specColor = uFoamColor * (specSharp * 2.2 + specWide * 0.22);
 
-    float crestGlow = smoothstep(0.32, 0.66, vElevation) * 0.12;
-    vec3 color = baseColor + specColor + uFoamColor * crestGlow;
+    float crestGlow = smoothstep(0.22, 0.6, vElevation) * 0.22;
+    vec3 color = baseColor + skySheen + specColor + uFoamColor * crestGlow;
 
-    gl_FragColor = vec4(color, uOpacity);
+    // Fade smoothly into the fog/background toward the horizon instead of a
+    // hard edge, while keeping nearby water solidly opaque and visible.
+    float distFade = smoothstep(90.0, 20.0, uCameraDist);
+    float alpha = uOpacity * mix(0.55, 1.0, distFade);
+
+    gl_FragColor = vec4(color, alpha);
   }
 `;
 
 const OceanMaterial = shaderMaterial(
   {
     uTime: 0,
-    uDeepColor: new THREE.Color("#0d0a1f"),
-    uShallowColor: new THREE.Color("#362852"),
-    uFoamColor: new THREE.Color("#d9a441"),
+    uDeepColor: new THREE.Color("#1a1436"),
+    uShallowColor: new THREE.Color("#5b447f"),
+    uSkyColor: new THREE.Color("#7d6ac2"),
+    uFoamColor: new THREE.Color("#e8c27a"),
     uSunDirection: new THREE.Vector3(0.5, 0.6, 0.3).normalize(),
     uOpacity: 1,
+    uCameraDist: 20,
   },
   vertexShader,
   fragmentShader
@@ -88,16 +108,22 @@ extend({ OceanMaterial });
 
 export default function Ocean() {
   const materialRef = useRef();
+  const meshRef = useRef();
+  const worldPos = useRef(new THREE.Vector3());
 
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uTime = state.clock.elapsedTime;
+      if (meshRef.current) {
+        meshRef.current.getWorldPosition(worldPos.current);
+        materialRef.current.uCameraDist = state.camera.position.distanceTo(worldPos.current);
+      }
     }
   });
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.55, 0]}>
-      <planeGeometry args={[360, 360, 140, 140]} />
+    <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.55, 0]}>
+      <planeGeometry args={[360, 360, 180, 180]} />
       <oceanMaterial ref={materialRef} transparent />
     </mesh>
   );

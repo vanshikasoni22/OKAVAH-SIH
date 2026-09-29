@@ -3,7 +3,7 @@ export default function FeasibilityCheck({ feasibility, vesselName, dropPort }) 
 
   return (
     <div
-      className={`sheen w-full rounded-2xl border p-6 ${
+      className={`sheen w-full rounded-2xl border p-5 ${
         passed ? "border-accent/25 bg-accent/5" : "border-warn/40 bg-warn/5"
       }`}
     >
@@ -26,14 +26,16 @@ export default function FeasibilityCheck({ feasibility, vesselName, dropPort }) 
         </span>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-3">
+      <div className="mt-3 grid grid-cols-3 gap-2.5">
         {checks.map((check) => (
           <div
             key={check.label}
-            className="sheen rounded-xl border border-hairline bg-surface-2/50 px-3 py-2.5 text-center"
+            className="sheen rounded-xl border border-hairline bg-surface-2/50 px-2.5 py-2 text-center"
           >
             <p className="text-xs text-text-muted">{check.label}</p>
-            <p className={`mt-1 text-sm font-semibold ${check.pass ? "text-text" : "text-warn"}`}>
+            <p
+              className={`mt-1 font-mono text-sm font-semibold ${check.pass ? "text-text" : "text-warn"}`}
+            >
               {check.vessel}
               {check.unit}{" "}
               <span className="font-normal text-text-muted">
@@ -45,7 +47,7 @@ export default function FeasibilityCheck({ feasibility, vesselName, dropPort }) 
         ))}
       </div>
 
-      <p className="mt-4 text-sm leading-relaxed text-text-muted">
+      <p className="mt-3 text-sm leading-relaxed text-text-muted">
         {passed
           ? "Compatibility PASSED: draft and beam within destination limits."
           : "Compatibility FAILED: draft exceeds destination limits — a smaller vessel class or lightering will be required."}

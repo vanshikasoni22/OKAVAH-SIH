@@ -26,6 +26,7 @@
   --color-down: var(--color-down);
   --font-display: var(--font-big-shoulders);
   --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 
   /* Type scale: 12 / 14 / 16 / 20 / 28 / 40 / 64. xs/sm/base/xl already land
      on 12/14/16/20 in Tailwind's default scale; 2xl/4xl/6xl are retuned here
@@ -97,19 +98,31 @@ body {
     0 0 0 4px rgba(217, 164, 65, 0.7);
 }
 
-/* Native date-input affordances are the fastest way to tell a form was left
-   at browser defaults. The calendar glyph can't be recolored directly, so
-   this filter chain retargets Chromium's default near-black icon to the
-   accent amber instead of leaving it a mismatched gray square. */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  opacity: 0.75;
-  filter: invert(70%) sepia(45%) saturate(500%) hue-rotate(345deg) brightness(96%);
-  transition: opacity 0.2s ease;
+/* The connecting line behind "How Charter-IQ works"'s three steps: a static
+   hairline plus a slow amber highlight sweeping along it, so the section
+   reads as one linear process rather than three unrelated columns. */
+.flow-line {
+  background-image:
+    linear-gradient(var(--color-hairline), var(--color-hairline)),
+    linear-gradient(90deg, transparent, rgba(217, 164, 65, 0.7) 8%, transparent 16%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%, 60% 100%;
+  animation: flow-line-scan 5s ease-in-out infinite;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
+@keyframes flow-line-scan {
+  0% {
+    background-position: 0 0, -60% 0;
+  }
+  100% {
+    background-position: 0 0, 160% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-line {
+    animation: none;
+  }
 }
 
 /* Recharts renders internal layer groups with tabindex="-1" purely so it can

@@ -1,4 +1,4 @@
-import { Big_Shoulders, Inter } from "next/font/google";
+import { Big_Shoulders, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const bigShoulders = Big_Shoulders({
@@ -12,6 +12,15 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+// Dashboard-only "terminal" numerals — freight rates, weights, dates — so
+// those screens read like an instrument, distinct from the homepage's
+// marketing typography.
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  weight: ["500", "600"],
+});
+
 export const metadata = {
   title: "Charter-IQ — AI Freight Forecasting for SAIL",
   description:
@@ -22,7 +31,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${bigShoulders.variable} ${inter.variable} h-full antialiased`}
+      className={`${bigShoulders.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg font-sans text-text">
         {children}

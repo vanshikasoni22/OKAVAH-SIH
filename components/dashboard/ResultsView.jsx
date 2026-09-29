@@ -151,12 +151,12 @@ export default function ResultsView() {
                   {selectedPoint ? `Rate for ${formatDate(selectedPoint.date)}` : "Landing cost"}
                 </p>
                 <div className="mt-4 flex flex-wrap items-baseline justify-center gap-x-3">
-                  <span className="font-display text-7xl font-bold leading-none tracking-tight text-text sm:text-8xl">
+                  <span className="font-mono text-7xl font-bold leading-none tracking-tight text-text sm:text-8xl">
                     {rateFormatter.format(displayRate)}
                   </span>
                   <span className="text-xl text-text-muted sm:text-2xl">/ MT</span>
                 </div>
-                <p className="mt-4 text-xl text-text-muted">
+                <p className="mt-4 font-mono text-xl text-text-muted">
                   ≈ {totalFormatter.format(displayTotal)} total for{" "}
                   {query.weight.toLocaleString("en-IN")} MT
                 </p>

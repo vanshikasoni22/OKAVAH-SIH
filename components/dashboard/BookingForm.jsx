@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useBookingQuery } from "@/lib/BookingQueryContext";
 import { useStageTransition } from "@/lib/useStageTransition";
 import ShipLoader from "@/components/ui/ShipLoader";
+import CustomSelect from "@/components/ui/CustomSelect";
+import CustomDateInput from "@/components/ui/CustomDateInput";
 import QuickPresets from "@/components/dashboard/QuickPresets";
 import { PICKUP_PORTS, DROP_PORTS, COMMODITIES } from "@/lib/mockPortData";
 
@@ -20,9 +22,6 @@ const INITIAL_FORM = {
 const inputClass =
   "w-full rounded-xl border border-hairline bg-surface-2 px-4 py-3 text-base text-text outline-none transition-colors focus:border-accent/50 [color-scheme:dark]";
 
-const selectClass =
-  "w-full appearance-none rounded-xl border border-hairline bg-surface-2 px-4 py-3 pr-10 text-base text-text outline-none transition-colors focus:border-accent/50";
-
 function Field({ label, htmlFor, error, children }) {
   return (
     <div className="flex flex-col gap-2">
@@ -35,18 +34,20 @@ function Field({ label, htmlFor, error, children }) {
   );
 }
 
-function Chevron() {
+function RouteArrow() {
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 20 20"
-      className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-    >
-      <path d="M5 7.5 10 12.5 15 7.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <div className="group flex items-center justify-center pt-8 sm:pt-9">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 28 28"
+        className="h-6 w-6 rotate-90 text-accent transition-transform duration-300 group-hover:translate-x-1 sm:rotate-0"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      >
+        <path d="M3 14h19M15 7l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
   );
 }
 
@@ -128,22 +129,20 @@ export default function BookingForm() {
             <div className="flex flex-col gap-8">
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <Field label="Start date" htmlFor="startDate" error={errors.startDate}>
-                  <input
+                  <CustomDateInput
                     id="startDate"
-                    type="date"
-                    className={inputClass}
                     value={form.startDate}
-                    onChange={(e) => update("startDate", e.target.value)}
+                    onChange={(value) => update("startDate", value)}
+                    placeholder="Select start date"
                   />
                 </Field>
                 <Field label="End date" htmlFor="endDate" error={errors.endDate}>
-                  <input
+                  <CustomDateInput
                     id="endDate"
-                    type="date"
-                    min={form.startDate || undefined}
-                    className={inputClass}
                     value={form.endDate}
-                    onChange={(e) => update("endDate", e.target.value)}
+                    onChange={(value) => update("endDate", value)}
+                    min={form.startDate || undefined}
+                    placeholder="Select end date"
                   />
                 </Field>
               </div>
@@ -151,76 +150,40 @@ export default function BookingForm() {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                 <div className="flex-1">
                   <Field label="Pickup port" htmlFor="pickupPort" error={errors.pickupPort}>
-                    <div className="relative">
-                      <select
-                        id="pickupPort"
-                        className={selectClass}
-                        value={form.pickupPort}
-                        onChange={(e) => update("pickupPort", e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select pickup port
-                        </option>
-                        {PICKUP_PORTS.map((port) => (
-                          <option key={port} value={port}>
-                            {port}
-                          </option>
-                        ))}
-                      </select>
-                      <Chevron />
-                    </div>
+                    <CustomSelect
+                      id="pickupPort"
+                      value={form.pickupPort}
+                      onChange={(value) => update("pickupPort", value)}
+                      options={PICKUP_PORTS}
+                      placeholder="Select pickup port"
+                    />
                   </Field>
                 </div>
 
-                <div className="flex items-center justify-center pt-8 text-xl text-accent sm:pt-9">
-                  <span className="sm:hidden">↓</span>
-                  <span className="hidden sm:inline">→</span>
-                </div>
+                <RouteArrow />
 
                 <div className="flex-1">
                   <Field label="Drop port" htmlFor="dropPort" error={errors.dropPort}>
-                    <div className="relative">
-                      <select
-                        id="dropPort"
-                        className={selectClass}
-                        value={form.dropPort}
-                        onChange={(e) => update("dropPort", e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select drop port
-                        </option>
-                        {DROP_PORTS.map((port) => (
-                          <option key={port} value={port}>
-                            {port}
-                          </option>
-                        ))}
-                      </select>
-                      <Chevron />
-                    </div>
+                    <CustomSelect
+                      id="dropPort"
+                      value={form.dropPort}
+                      onChange={(value) => update("dropPort", value)}
+                      options={DROP_PORTS}
+                      placeholder="Select drop port"
+                    />
                   </Field>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <Field label="Commodity" htmlFor="commodity" error={errors.commodity}>
-                  <div className="relative">
-                    <select
-                      id="commodity"
-                      className={selectClass}
-                      value={form.commodity}
-                      onChange={(e) => update("commodity", e.target.value)}
-                    >
-                      <option value="" disabled>
-                        Select commodity
-                      </option>
-                      {COMMODITIES.map((commodity) => (
-                        <option key={commodity} value={commodity}>
-                          {commodity}
-                        </option>
-                      ))}
-                    </select>
-                    <Chevron />
-                  </div>
+                  <CustomSelect
+                    id="commodity"
+                    value={form.commodity}
+                    onChange={(value) => update("commodity", value)}
+                    options={COMMODITIES}
+                    placeholder="Select commodity"
+                  />
                 </Field>
 
                 <Field label="Cargo weight (tonnes)" htmlFor="weight" error={errors.weight}>

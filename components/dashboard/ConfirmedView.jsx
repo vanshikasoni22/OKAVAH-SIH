@@ -141,8 +141,8 @@ export default function ConfirmedView() {
               </Reveal>
 
               <Reveal delay={0.06} className="mt-8 w-full">
-                <div className="sheen rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
-                  <dl className="grid grid-cols-2 gap-x-6 gap-y-5 text-left sm:grid-cols-4">
+                <div className="sheen rounded-3xl border border-hairline bg-surface p-5 sm:p-6">
+                  <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-left sm:grid-cols-4">
                     <div>
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Route
@@ -155,7 +155,7 @@ export default function ConfirmedView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Date
                       </dt>
-                      <dd className="mt-1 text-sm font-semibold text-text">
+                      <dd className="mt-1 font-mono text-sm font-semibold text-text">
                         {formatDate(finalDate)}
                       </dd>
                     </div>
@@ -169,7 +169,7 @@ export default function ConfirmedView() {
                       <dt className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                         Landing cost
                       </dt>
-                      <dd className="mt-1 text-sm font-semibold text-text">
+                      <dd className="mt-1 font-mono text-sm font-semibold text-text">
                         {rateFormatter.format(finalRate)} / MT
                         <span className="block font-normal text-text-muted">
                           {totalFormatter.format(finalTotal)} total

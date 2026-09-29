@@ -27,9 +27,9 @@ export default function CameraRig() {
     }
 
     target.set(
-      Math.sin(t * 0.035) * 3.4,
-      6.6 + Math.sin(t * 0.05 + 1.1) * 0.55,
-      18 + Math.cos(t * 0.028) * 1.8
+      Math.sin(t * 0.06) * 4.2,
+      6.6 + Math.sin(t * 0.08 + 1.1) * 0.7,
+      18 + Math.cos(t * 0.05) * 2.6
     );
     cam.position.lerp(target, 0.015);
     cam.lookAt(0, -0.3, 0);

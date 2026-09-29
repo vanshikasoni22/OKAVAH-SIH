@@ -58,7 +58,7 @@ export default function QuickPresets({ onApply }) {
                 endDate: isoDateFromNow(24),
               })
             }
-            className="rounded-full border border-hairline bg-surface-2/60 px-4 py-2 text-xs font-medium text-text-muted transition-colors hover:border-accent/40 hover:text-accent-soft"
+            className="rounded-full border border-hairline/60 bg-transparent px-3 py-1.5 text-[11px] font-medium text-text-muted transition-colors hover:border-accent/40 hover:bg-accent/5 hover:text-accent-soft"
           >
             {preset.label}
           </button>
