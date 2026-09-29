@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #0a0714;
-  --color-surface: #150e26;
-  --color-surface-2: #1b1030;
+  --color-bg: #050a0f;
+  --color-surface: #0d1b24;
+  --color-surface-2: #122530;
   --color-accent: #d9a441;
   --color-accent-soft: #e8c27a;
   --color-text: #f3f0f9;
-  --color-text-muted: #9c93b0;
+  --color-text-muted: #6e8494;
   --color-hairline: rgba(243, 240, 249, 0.1);
-  --color-warn: #e08a5c;
-  --color-down: #8f83d1;
+  --color-warn: #c4523d;
+  --color-down: #5c8aa6;
 }
 
 @theme inline {
@@ -121,6 +121,26 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .flow-line {
+    animation: none;
+  }
+}
+
+/* The trade-route arc on the results-page map: a flowing dash pattern so the
+   line reads as active movement along the route rather than a static
+   drawn-on curve. */
+.route-line-flow {
+  stroke-dasharray: 5 7;
+  animation: route-line-flow 1.1s linear infinite;
+}
+
+@keyframes route-line-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-line-flow {
     animation: none;
   }
 }

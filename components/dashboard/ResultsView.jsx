@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "@/components/motion/Reveal";
 import SignalPill from "@/components/ui/SignalPill";
 import ShipLoader from "@/components/ui/ShipLoader";
+import RouteMap from "@/components/dashboard/RouteMap";
 import PriceTrendChart from "@/components/dashboard/PriceTrendChart";
 import VesselOptions from "@/components/dashboard/VesselOptions";
 import FeasibilityCheck from "@/components/dashboard/FeasibilityCheck";
@@ -177,6 +178,10 @@ export default function ResultsView() {
                 <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-text-muted">
                   {result.insight}
                 </p>
+              </Reveal>
+
+              <Reveal delay={0.04} className="mt-10 w-full">
+                <RouteMap query={query} ratePerMT={result.ratePerMT} />
               </Reveal>
 
               {analysisReady ? (
